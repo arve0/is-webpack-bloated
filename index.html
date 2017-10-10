@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Is Webpack Bloated?</title>
+  <style>
+    html {
+      font-size: 20px;
+    }
+    h1 {
+      font-size: 1.5em;
+    }
+    body {
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    table {
+      margin-top: 2em;
+      border-spacing: 0;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.3em;
+      padding-right: 2em;
+      border-color: black;
+      border-width: 1px;
+      border-style: solid;
+    }
+    tr:nth-child(2n + 1) {
+      background-color: #bbffff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Is Webpack Bloated?</h1>
+  <code>npm install webpack</code> will download 6.7 MB of tarballs. That is 327 packages and 36 MB of node_modules. Several packages have the same use case, like minimatch and micromatch. 17 packages are installed more than once (different versions).<br><br>
+
+  This is part of what's great about node packages, different versions can live side by side. But has it gone too far? Can we do better? Is it possible to get consensus on common used packages?<br><br>
+
+  In the table below you can investigate the packages yourself. Click on columns to sort.
+  <div id="table">
+    <table>
+      <tr>
+        <th @click="sort('name')">Package</th>
+        <th @click="sort('version')">Version</th>
+        <th @click="sort('size')">Size</th>
+      </tr>
+      <tr v-for="pkg in pkgs">
+        <td>{{pkg.name}}</td>
+        <td>{{pkg.version}}</td>
+        <td>{{pkg.prettySize}}</td>
+      </tr>
+    </table>
+  </div>
+  <script src="https://vuejs.org/js/vue.js"></script>
+  <script src="https://wzrd.in/standalone/si-prefix@latest"></script>
+  <script>
+new Vue({
+  el:'#table',
+  data: {
+    pkgs: getData().map(i => ({
+      name: i[0],
+      version: i[1],
+      size: i[2],
+      prettySize: prettySize(i[2])
+    })),
+    sortDir: {
+      name: -1,  // -1: z-a, 1: a-z
+      version: -1,
+      size: -1
+    }
+  },
+  methods: {
+    sort: function (by) {
+      let sort = (a, b) => {
+        if (a[by] < b[by]) {
+          return -1 * this.sortDir[by]
+        } else if (a[by] > b[by]) {
+          return 1 * this.sortDir[by]
+        } else {
+          return 0
+        }
+      }
+      this.pkgs.sort(sort)
+      this.sortDir[by] *= -1
+    },
+  }
+})
+
+function prettySize (bytes) {
+  let size = siPrefix.byte.convert(bytes)
+  return size[0].toFixed(1) + ' ' + size[1]
+}
+
+function getData() {
+  return [['abbrev', '1.1.1', 2301],
+['acorn', '4.0.13', 144876],
+['acorn', '5.1.2', 106427],
+['acorn-dynamic-import', '2.0.2', 3229],
+['ajv', '5.2.3', 509400],
+['ajv', '4.11.8', 507124],
+['ajv-keywords', '2.1.0', 15692],
+['align-text', '0.1.4', 3547],
+['ansi-regex', '2.1.1', 2340],
+['ansi-regex', '3.0.0', 2264],
+['anymatch', '1.3.2', 3392],
+['aproba', '1.2.0', 3526],
+['are-we-there-yet', '1.1.4', 5312],
+['arr-diff', '2.0.0', 2431],
+['arr-flatten', '1.1.0', 2872],
+['array-unique', '0.2.1', 2131],
+['asn1', '0.2.3', 7931],
+['asn1.js', '4.9.1', 14372],
+['assert', '1.4.1', 9253],
+['assert-plus', '1.0.0', 3943],
+['assert-plus', '0.2.0', 3806],
+['async', '2.5.0', 100003],
+['async-each', '1.0.1', 1791],
+['asynckit', '0.4.0', 8111],
+['aws-sign2', '0.6.0', 5175],
+['aws4', '1.6.0', 9584],
+['balanced-match', '1.0.0', 2566],
+['base64-js', '1.2.1', 4568],
+['bcrypt-pbkdf', '1.0.1', 10403],
+['big.js', '3.2.0', 14401],
+['binary-extensions', '1.10.0', 2123],
+['block-stream', '0.0.9', 3729],
+['bn.js', '4.11.8', 23213],
+['boom', '2.10.1', 39495],
+['brace-expansion', '1.1.8', 3939],
+['braces', '1.8.5', 5981],
+['brorand', '1.1.0', 2509],
+['browserify-aes', '1.0.8', 7629],
+['browserify-cipher', '1.0.0', 1647],
+['browserify-des', '1.0.0', 1419],
+['browserify-rsa', '4.0.1', 5999],
+['browserify-sign', '4.0.4', 4390],
+['browserify-zlib', '0.1.4', 64977],
+['buffer', '4.9.1', 59441],
+['buffer-xor', '1.0.3', 2294],
+['builtin-modules', '1.1.1', 1973],
+['builtin-status-codes', '3.0.0', 2374],
+['camelcase', '4.1.0', 2035],
+['camelcase', '1.2.1', 1756],
+['caseless', '0.12.0', 5323],
+['center-align', '0.1.3', 2402],
+['chokidar', '1.7.0', 22861],
+['cipher-base', '1.0.4', 3041],
+['cliui', '2.1.0', 6070],
+['cliui', '3.2.0', 4953],
+['co', '4.6.0', 5880],
+['code-point-at', '1.1.0', 1776],
+['combined-stream', '1.0.5', 3675],
+['concat-map', '0.0.1', 2263],
+['console-browserify', '1.1.0', 3506],
+['console-control-strings', '1.1.0', 3335],
+['constants-browserify', '1.0.0', 3383],
+['core-util-is', '1.0.2', 7016],
+['create-ecdh', '4.0.0', 2576],
+['create-hash', '1.1.3', 3856],
+['create-hmac', '1.1.6', 1768],
+['cross-spawn', '5.1.0', 6053],
+['cryptiles', '2.0.5', 2904],
+['crypto-browserify', '3.11.1', 15193],
+['d', '1.0.0', 5831],
+['dashdash', '1.14.1', 23544],
+['date-now', '0.1.4', 2530],
+['debug', '2.6.9', 16514],
+['decamelize', '1.2.0', 1691],
+['deep-extend', '0.4.2', 3259],
+['delayed-stream', '1.0.0', 3464],
+['delegates', '1.0.0', 2848],
+['des.js', '1.0.0', 9979],
+['diffie-hellman', '5.0.2', 4733],
+['domain-browser', '1.1.7', 10891],
+['ecc-jsbn', '0.1.1', 8187],
+['elliptic', '6.4.0', 41164],
+['emojis-list', '2.1.0', 10493],
+['enhanced-resolve', '3.4.1', 17730],
+['errno', '0.1.4', 5787],
+['error-ex', '1.3.1', 3519],
+['es5-ext', '0.10.31', 128755],
+['es6-iterator', '2.0.1', 7364],
+['es6-map', '0.1.5', 7961],
+['es6-set', '0.1.5', 8190],
+['es6-symbol', '3.1.1', 6062],
+['es6-weak-map', '2.0.2', 5124],
+['escope', '3.6.0', 144016],
+['esrecurse', '4.2.0', 30988],
+['estraverse', '4.2.0', 7199],
+['event-emitter', '0.3.5', 7592],
+['events', '1.1.1', 7960],
+['evp_bytestokey', '1.0.3', 2610],
+['execa', '0.7.0', 6593],
+['expand-brackets', '0.1.5', 3659],
+['expand-range', '1.8.2', 3248],
+['extend', '3.0.1', 6710],
+['extglob', '0.3.2', 3902],
+['extsprintf', '1.3.0', 9009],
+['fast-deep-equal', '1.0.0', 5009],
+['filename-regex', '2.0.1', 2111],
+['fill-range', '2.2.3', 6338],
+['find-up', '2.1.0', 2234],
+['for-in', '1.0.2', 2637],
+['for-own', '0.1.5', 2689],
+['forever-agent', '0.6.1', 5035],
+['form-data', '2.1.4', 7574],
+['fs.realpath', '1.0.0', 4434],
+['fsevents', '1.1.2', 1830818],
+['fstream', '1.0.11', 17228],
+['fstream-ignore', '1.0.5', 3902],
+['gauge', '2.7.4', 16014],
+['get-caller-file', '1.0.2', 937],
+['get-stream', '3.0.0', 3497],
+['getpass', '0.1.7', 2601],
+['glob', '7.1.2', 15621],
+['glob-base', '0.3.0', 2844],
+['glob-parent', '2.0.0', 2017],
+['graceful-fs', '4.1.11', 7905],
+['har-schema', '1.0.5', 3595],
+['har-validator', '4.2.1', 4536],
+['has-flag', '2.0.0', 1850],
+['has-unicode', '2.0.1', 1965],
+['hash-base', '3.0.4', 2644],
+['hash-base', '2.0.2', 1772],
+['hash.js', '1.1.3', 13730],
+['hawk', '3.1.3', 121790],
+['hmac-drbg', '1.0.1', 12509],
+['hoek', '2.16.3', 65204],
+['hosted-git-info', '2.5.0', 5398],
+['http-signature', '1.1.1', 15230],
+['https-browserify', '0.0.1', 1419],
+['ieee754', '1.1.8', 3326],
+['indexof', '0.0.1', 698],
+['inflight', '1.0.6', 2041],
+['inherits', '2.0.1', 2122],
+['inherits', '2.0.3', 2028],
+['ini', '1.3.4', 3834],
+['interpret', '1.0.4', 3117],
+['invert-kv', '1.0.0', 833],
+['is-arrayish', '0.2.1', 2646],
+['is-binary-path', '1.0.1', 1557],
+['is-buffer', '1.1.5', 2378],
+['is-builtin-module', '1.0.0', 1549],
+['is-dotfile', '1.0.3', 2776],
+['is-equal-shallow', '0.1.3', 2471],
+['is-extendable', '0.1.1', 2381],
+['is-extglob', '1.0.0', 2063],
+['is-fullwidth-code-point', '1.0.0', 2124],
+['is-fullwidth-code-point', '2.0.0', 2063],
+['is-glob', '2.0.1', 2485],
+['is-number', '3.0.0', 2851],
+['is-number', '2.1.0', 2450],
+['is-posix-bracket', '0.1.1', 2418],
+['is-primitive', '2.0.0', 1738],
+['is-stream', '1.1.0', 1616],
+['is-typedarray', '1.0.0', 1881],
+['isarray', '1.0.0', 2021],
+['isexe', '2.0.0', 3756],
+['isobject', '2.1.0', 2387],
+['isstream', '0.1.2', 3755],
+['jsbn', '0.1.1', 13715],
+['json-loader', '0.5.7', 2866],
+['json-schema', '0.2.3', 33667],
+['json-schema-traverse', '0.3.1', 5165],
+['json-stable-stringify', '1.0.1', 4527],
+['json-stringify-safe', '5.0.1', 4014],
+['json5', '0.5.1', 13523],
+['jsonify', '0.0.0', 4376],
+['jsprim', '1.4.1', 10886],
+['kind-of', '4.0.0', 4901],
+['kind-of', '3.2.2', 4861],
+['lazy-cache', '1.0.4', 3295],
+['lcid', '1.0.0', 3211],
+['load-json-file', '2.0.0', 1750],
+['loader-runner', '2.3.0', 4191],
+['loader-utils', '1.1.0', 8175],
+['locate-path', '2.0.0', 2019],
+['lodash', '4.17.4', 310669],
+['longest', '1.0.1', 2068],
+['lru-cache', '4.1.1', 6052],
+['md5.js', '1.3.4', 3118],
+['mem', '1.1.0', 2765],
+['memory-fs', '0.4.1', 3423],
+['micromatch', '2.3.11', 14623],
+['miller-rabin', '4.0.1', 4146],
+['mime-db', '1.30.0', 24255],
+['mime-types', '2.1.17', 4759],
+['mimic-fn', '1.1.0', 1780],
+['minimalistic-assert', '1.0.0', 993],
+['minimalistic-crypto-utils', '1.0.1', 3039],
+['minimatch', '3.0.4', 11423],
+['minimist', '1.2.0', 7724],
+['minimist', '0.0.8', 5990],
+['mkdirp', '0.5.1', 4991],
+['ms', '2.0.0', 2874],
+['nan', '2.7.0', 68520],
+['node-libs-browser', '2.0.0', 3874],
+['node-pre-gyp', '0.6.38', 32309],
+['nopt', '4.0.1', 11766],
+['normalize-package-data', '2.4.0', 8671],
+['normalize-path', '2.1.1', 3159],
+['npm-run-path', '2.0.2', 2221],
+['npmlog', '4.1.2', 6509],
+['number-is-nan', '1.0.1', 1464],
+['oauth-sign', '0.8.2', 5134],
+['object-assign', '4.1.1', 2675],
+['object.omit', '2.0.1', 3032],
+['once', '1.4.0', 1979],
+['os-browserify', '0.2.1', 1593],
+['os-homedir', '1.0.2', 1758],
+['os-locale', '2.1.0', 2431],
+['os-tmpdir', '1.0.2', 1796],
+['osenv', '0.1.4', 3641],
+['p-finally', '1.0.0', 1754],
+['p-limit', '1.1.0', 2031],
+['p-locate', '2.0.0', 2580],
+['pako', '0.2.9', 194692],
+['parse-asn1', '5.1.0', 17646],
+['parse-glob', '3.0.4', 3991],
+['parse-json', '2.2.0', 9910],
+['path-browserify', '0.0.0', 3059],
+['path-exists', '3.0.0', 1891],
+['path-is-absolute', '1.0.1', 1882],
+['path-key', '2.0.1', 1746],
+['path-type', '2.0.0', 1742],
+['pbkdf2', '3.0.14', 4229],
+['performance-now', '0.2.0', 3394],
+['pify', '2.3.0', 2793],
+['preserve', '0.2.0', 3719],
+['process', '0.11.10', 4669],
+['process-nextick-args', '1.0.7', 1923],
+['prr', '0.0.0', 3778],
+['pseudomap', '1.0.2', 3443],
+['public-encrypt', '4.0.0', 15196],
+['punycode', '1.4.1', 8058],
+['punycode', '1.3.2', 7980],
+['qs', '6.4.0', 21598],
+['querystring', '0.2.0', 6669],
+['querystring-es3', '0.2.1', 6202],
+['randomatic', '1.1.7', 4087],
+['randombytes', '2.0.5', 2516],
+['rc', '1.2.1', 6471],
+['read-pkg', '2.0.0', 2062],
+['read-pkg-up', '2.0.0', 2085],
+['readable-stream', '2.3.3', 25587],
+['readdirp', '2.1.0', 12075],
+['regex-cache', '0.4.4', 3975],
+['remove-trailing-separator', '1.1.0', 2104],
+['repeat-element', '1.1.2', 1872],
+['repeat-string', '1.6.1', 3339],
+['request', '2.81.0', 56636],
+['require-directory', '2.1.1', 4372],
+['require-main-filename', '1.0.1', 2133],
+['right-align', '0.1.3', 2086],
+['rimraf', '2.6.2', 5535],
+['ripemd160', '2.0.1', 4906],
+['safe-buffer', '5.1.1', 8851],
+['semver', '5.4.1', 15723],
+['set-blocking', '2.0.0', 2212],
+['set-immediate-shim', '1.0.1', 821],
+['setimmediate', '1.0.5', 3255],
+['sha.js', '2.4.9', 9477],
+['shebang-command', '1.2.0', 1585],
+['shebang-regex', '1.0.0', 1425],
+['signal-exit', '3.0.2', 3967],
+['sntp', '1.0.9', 6853],
+['source-list-map', '2.0.0', 6816],
+['source-map', '0.5.7', 189755],
+['spdx-correct', '1.0.2', 5319],
+['spdx-expression-parse', '1.0.4', 12716],
+['spdx-license-ids', '1.2.2', 3574],
+['sshpk', '1.13.1', 44933],
+['stream-browserify', '2.0.1', 2969],
+['stream-http', '2.7.2', 49753],
+['string_decoder', '1.0.3', 4142],
+['string_decoder', '0.10.31', 3608],
+['string-width', '1.0.2', 2083],
+['string-width', '2.1.1', 1972],
+['stringstream', '0.0.5', 2593],
+['strip-ansi', '3.0.1', 1734],
+['strip-ansi', '4.0.0', 1644],
+['strip-bom', '3.0.0', 1736],
+['strip-eof', '1.0.0', 1556],
+['strip-json-comments', '2.0.1', 2270],
+['supports-color', '4.4.0', 2875],
+['tapable', '0.2.8', 3347],
+['tar', '2.2.1', 49619],
+['tar-pack', '3.4.0', 6339],
+['timers-browserify', '2.0.4', 3632],
+['to-arraybuffer', '1.0.1', 2617],
+['tough-cookie', '2.3.3', 63611],
+['tty-browserify', '0.0.0', 1255],
+['tunnel-agent', '0.6.0', 5828],
+['tweetnacl', '0.14.5', 49663],
+['uglify-js', '2.8.29', 130303],
+['uglify-to-browserify', '1.0.2', 2417],
+['uglifyjs-webpack-plugin', '0.4.6', 9512],
+['uid-number', '0.0.6', 2045],
+['url', '0.11.0', 17614],
+['util', '0.10.3', 10449],
+['util-deprecate', '1.0.2', 2246],
+['uuid', '3.1.0', 8471],
+['validate-npm-package-license', '3.0.1', 5169],
+['verror', '1.10.0', 12279],
+['vm-browserify', '0.0.4', 6846],
+['watchpack', '1.4.0', 5846],
+['webpack', '3.6.0', 179572],
+['webpack-sources', '1.0.1', 6118],
+['which', '1.3.0', 4209],
+['which-module', '2.0.0', 2232],
+['wide-align', '1.1.2', 2069],
+['window-size', '0.1.0', 1658],
+['wordwrap', '0.0.2', 13772],
+['wrap-ansi', '2.1.0', 3546],
+['wrappy', '1.0.2', 1676],
+['xtend', '4.0.1', 2542],
+['y18n', '3.2.1', 3424],
+['yallist', '2.1.2', 4239],
+['yargs', '8.0.2', 55633],
+['yargs', '3.10.0', 33186],
+['yargs-parser', '7.0.0', 11590]]}
+  </script>
+</body>
+</html>
