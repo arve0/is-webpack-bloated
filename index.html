@@ -41,7 +41,7 @@
 
   This is part of what's great about node packages, different versions can live side by side. But has it gone too far? Can we do better? Is it possible to get consensus on common used packages?<br><br>
 
-  In the table below you can investigate the packages yourself. Click on columns to sort.
+  In the table below you can investigate the packages yourself. Click on columns to sort. The table was create with <a href="https://www.npmjs.com/package/download-size">download-size</a>.
   <div id="table">
     <table>
       <tr>
@@ -50,7 +50,7 @@
         <th @click="sort('size')">Size</th>
       </tr>
       <tr v-for="pkg in pkgs">
-        <td>{{pkg.name}}</td>
+        <td><a :href="'https://www.npmjs.com/package/' + pkg.name">{{pkg.name}}</a></td>
         <td>{{pkg.version}}</td>
         <td>{{pkg.prettySize}}</td>
       </tr>
